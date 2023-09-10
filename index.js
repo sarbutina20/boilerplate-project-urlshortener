@@ -41,8 +41,9 @@ app.post("/api/shorturl", function (req, res) {
 
 app.get("/api/shorturl/:short_url", function (req, res) {
   const url = urlMap.get(req.params.short_url);
-  if(!url) res.json({ error: "invalid url" });
-  res.redirect(url); 
+  
+  res.redirect(url);
+  
 });
 
 app.listen(port, function () {
