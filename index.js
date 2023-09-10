@@ -33,17 +33,16 @@ app.post("/api/shorturl", function (req, res) {
   dns.lookup(urlObj.hostname, (err, address, family) => {
     if(err) res.json({ error: "invalid url" });
     const short_url = urlMap.size + 1;
-    urlMap.set(short_url, url);
+    urlMap.set(short_url.toString(), url);
+    
     res.json({ original_url: url, short_url });
   });
   
 });
 
-app.get("/api/shorturl/:short_url", function (req, res) {
-  const url = urlMap.get(req.params.short_url);
-  
+app.get("/api/shorturl/:url", function (req, res) {
+  const url = urlMap.get(req.params.url);
   res.redirect(url);
-  
 });
 
 app.listen(port, function () {
