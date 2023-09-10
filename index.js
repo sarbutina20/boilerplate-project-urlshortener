@@ -22,7 +22,6 @@ app.get("/api/hello", function (req, res) {
 });
 
 const urlMap = new Map();
-const urlMapSize = urlMap.size;
 
 app.post("/api/shorturl", function (req, res) {
   const url = req.body.url;
@@ -32,8 +31,8 @@ app.post("/api/shorturl", function (req, res) {
     if (err) {
       res.json({ error: "invalid url" });
     } else {
-      urlMap.set(urlMapSize, url);
-      res.json({ original_url: url, short_url: urlMapSize });
+      urlMap.set(urlMap.size, url);
+      res.json({ original_url: url, short_url: urlMap.size });
     }
   });
 });
