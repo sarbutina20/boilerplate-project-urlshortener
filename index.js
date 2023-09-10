@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const dns = require("dns");
+const validUrl = require("valid-url");
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -24,17 +25,18 @@ app.get("/api/hello", function (req, res) {
 const urlMap = new Map();
 
 app.post("/api/shorturl", function (req, res) {
+  
   const url = req.body.url;
-  url = url.toString();
-
-  dns.lookup(url, function (err, address, family) {
-    if (err) {
-      res.json({ error: "invalid url" });
-    } else {
-      urlMap.set(urlMap.size, url);
-      res.json({ original_url: url, short_url: urlMap.size });
-    }
+  if(!validUrl.isWebUri(url)) res.json({ error: "invalid url" });
+  
+  const urlObj = new URL(url);
+  dns.lookup(urlObj.hostname, (err, address, family) => {
+    if(err) res.json({ error: "invalid url" });
+    const short_url = urlMap.size + 1;
+    urlMap.set(short_url, url);
+    res.json({ original_url: url, short_url });
   });
+  
 });
 
 app.get("/api/shorturl/:short_url", function (req, res) {
