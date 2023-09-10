@@ -25,12 +25,15 @@ const urlMap = new Map();
 const urlMapSize = urlMap.size;
 
 app.post("/api/shorturl", function (req, res) {
-  dns.lookup(req.body.url, function (err, address, family) {
+  const url = req.body.url;
+  url = url.toString();
+
+  dns.lookup(url, function (err, address, family) {
     if (err) {
       res.json({ error: "invalid url" });
     } else {
-      urlMap.set(urlMapSize, req.body.url);
-      res.json({ original_url: req.body.url, short_url: urlMapSize });
+      urlMap.set(urlMapSize, url);
+      res.json({ original_url: url, short_url: urlMapSize });
     }
   });
 });
